@@ -60,11 +60,12 @@
             });
         </script>
         <script>
-            const ws = new WebSocket("ws://localhost:8000/resource");
+            const ws = new WebSocket("ws://" + location.hostname + ":8000/resource");
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data)
+                data.cpu += 5
                 cpu.set(data.cpu / 100)
-                cpu.setText("CPU\n" + data.cpu)
+                cpu.setText("CPU\n" + (data.cpu))
                 ram.set(data.ram / 100)
                 ram.setText("RAM\n" + data.ram)
                 network.set(100)
