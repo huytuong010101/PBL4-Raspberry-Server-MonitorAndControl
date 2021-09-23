@@ -65,13 +65,13 @@
                 const data = JSON.parse(event.data)
                 data.cpu += 5
                 cpu.set(data.cpu / 100)
-                cpu.setText("CPU\n" + (data.cpu))
+                cpu.setText("CPU\n" + data.cpu + "%")
                 ram.set(data.ram / 100)
-                ram.setText("RAM\n" + data.ram)
+                ram.setText("RAM\n" + data.ram + "%")
                 network.set(100)
                 network.setText("SEND\n" + data.network)
                 disk.set(data.disk / 100)
-                disk.setText("DISK\n" + data.disk)
+                disk.setText("DISK\n" + data.disk + "%")
             };
             ws.onclose = () => {
                 toastr.error("Disconnected to websocket")
