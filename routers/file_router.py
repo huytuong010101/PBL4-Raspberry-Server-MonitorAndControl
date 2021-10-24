@@ -11,6 +11,8 @@ file_router = APIRouter(tags=["File management"])
 async def get_file(base_path: str = "/"):
     try:
         return FileService.get_all_file(base_path)
+    except HTTPException as e:
+        raise e
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

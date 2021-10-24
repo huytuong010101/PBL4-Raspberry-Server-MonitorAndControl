@@ -7,6 +7,8 @@ from fastapi.responses import FileResponse
 class FileService:
     @staticmethod
     def get_all_file(base_path: str):
+        if not os.path.isdir(base_path):
+            raise HTTPException(status_code=404, detail="Đường dẫn không tồn tại")
         res = []
         for file_name in os.listdir(base_path):
             full_path = os.path.join(base_path, file_name)
