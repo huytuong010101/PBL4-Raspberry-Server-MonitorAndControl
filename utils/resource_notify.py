@@ -59,14 +59,17 @@ async def loop_to_notify_resource(send_message: Callable = None, tracking: Calla
         if hasattr(psutil, "sensors_temperatures"):
             temperature = psutil.sensors_temperatures()["cpu_thermal"][0].current
         data = {
-            "cpu": cpu,
-            "memory": memory,
-            "disk": disk,
-            "network": network,
-            "temperature": temperature,
+            "event": "update_resource",
+            "data": {
+                "cpu": cpu,
+                "memory": memory,
+                "disk": disk,
+                "network": network,
+                "temperature": temperature,
+            }
         }
         if send_message is not None:
-            await send_message(data)
+            await send_message(data, group="resource")
         if tracking is not None:
             await tracking(data)
         await asyncio.sleep(delay)
