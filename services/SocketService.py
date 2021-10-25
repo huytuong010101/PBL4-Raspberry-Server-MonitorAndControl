@@ -32,7 +32,10 @@ class SocketService:
             output = subprocess.run(data["command"], cwd=cwd, shell=True, capture_output=True, text=True).stdout
             data = {
                 "event": "response_command",
-                "response": output
+                "data": {
+                    "command": output
+                }
+
             }
             await cls.manager.unicast(user_id, data)
 
