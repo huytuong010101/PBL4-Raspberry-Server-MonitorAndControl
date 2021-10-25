@@ -1,11 +1,16 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 from routers import file_router, socket_router, appplication_router
 
 
 # Init app
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"]
+)
 # Template
 templates = Jinja2Templates(directory="templates")
 

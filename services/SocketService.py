@@ -29,7 +29,7 @@ class SocketService:
     async def execute_command(cls, user_id: int, data: dict):
         if "command" in data:
             cwd = "./" if "cwd" not in data else data["cwd"]
-            output = subprocess.run(data["command"],cwd=cwd, shell=True, capture_output=True, text=True).stdout
+            output = subprocess.run(data["command"], cwd=cwd, shell=True, capture_output=True, text=True).stdout
             data = {
                 "event": "response_command",
                 "response": output
