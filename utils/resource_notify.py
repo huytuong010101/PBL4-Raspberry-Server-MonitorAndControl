@@ -50,7 +50,7 @@ async def loop_to_notify_resource(send_message: Callable = None, tracking: Calla
                 pass
         # get network
         net = psutil.net_io_counters()
-        byte_send = net.bytes_sent,
+        byte_send = net.bytes_sent
         byte_receive = net.bytes_recv
         network = {
             "send": get_size(byte_send),
