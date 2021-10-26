@@ -50,9 +50,13 @@ async def loop_to_notify_resource(send_message: Callable = None, tracking: Calla
                 pass
         # get network
         net = psutil.net_io_counters()
+        byte_send = net.bytes_sent,
+        byte_receive = net.bytes_recv
         network = {
-            "sent": get_size(net.bytes_sent),
-            "receive": get_size(net.bytes_recv),
+            "send": get_size(byte_send),
+            "receive": get_size(byte_receive),
+            "byte_send": byte_send,
+            "byte_receive": byte_receive
         }
         # get temperatures
         temperature = None
