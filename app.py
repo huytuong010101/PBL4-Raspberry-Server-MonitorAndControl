@@ -9,7 +9,10 @@ from routers import file_router, socket_router, appplication_router
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"]
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 # Template
 templates = Jinja2Templates(directory="templates")
