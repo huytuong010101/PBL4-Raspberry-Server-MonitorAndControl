@@ -2,6 +2,7 @@ import os
 from pydantics.File import FileOut
 from fastapi import HTTPException, status, UploadFile
 from fastapi.responses import FileResponse
+import shutil
 
 
 class FileService:
@@ -40,7 +41,7 @@ class FileService:
         if os.path.isfile(file_path):
             os.remove(file_path)
         else:
-            os.rmdir(file_path)
+            shutil.rmtree(file_path, ignore_errors=True)
 
     @staticmethod
     def get_file(file_path: str):
