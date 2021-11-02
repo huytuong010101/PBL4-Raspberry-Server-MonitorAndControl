@@ -27,10 +27,10 @@ async def get_file(file_path: str):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@file_router.put("/{file_path:path}", status_code=status.HTTP_204_NO_CONTENT)
-async def rename(file_path: str, data: FileUpdate):
+@file_router.put("/", status_code=status.HTTP_204_NO_CONTENT)
+async def rename(data: FileUpdate):
     try:
-        FileService.rename(file_path, data.name)
+        FileService.rename(data.path, data.name)
         return
     except HTTPException as e:
         raise e

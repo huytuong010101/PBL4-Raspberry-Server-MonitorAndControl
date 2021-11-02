@@ -12,6 +12,7 @@ class FileOut(BaseModel):
 
 class FileUpdate(BaseModel):
     name: str
+    path: str
 
 
 class DirIn(BaseModel):
