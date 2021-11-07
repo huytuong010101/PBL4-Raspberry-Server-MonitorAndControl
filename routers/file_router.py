@@ -1,14 +1,15 @@
-from fastapi import APIRouter, HTTPException, status, File, UploadFile
+from fastapi import APIRouter, HTTPException, status, File, UploadFile, Depends
 from pydantics.File import FileOut, FileUpdate, DirIn
 from typing import List
 from services.FileService import FileService
+from services.AuthService import AuthService
 
 
 file_router = APIRouter(tags=["File management"])
 
 
 @file_router.get("/", response_model=List[FileOut])
-async def get_file(base_path: str = "/"):
+async def get_file(base_path: str = "/", user: dict = Depends(AuthService.get_current_user)):
     try:
         return FileService.get_all_file(base_path)
     except HTTPException as e:
@@ -18,7 +19,7 @@ async def get_file(base_path: str = "/"):
 
 
 @file_router.get("/download/{file_path:path}", status_code=status.HTTP_200_OK)
-async def get_file(file_path: str):
+async def get_file(file_path: str, user: dict = Depends(AuthService.get_current_user)):
     try:
         return FileService.get_file(file_path)
     except HTTPException as e:
@@ -28,7 +29,7 @@ async def get_file(file_path: str):
 
 
 @file_router.put("/", status_code=status.HTTP_204_NO_CONTENT)
-async def rename(data: FileUpdate):
+async def rename(data: FileUpdate, user: dict = Depends(AuthService.get_current_user)):
     try:
         FileService.rename(data.path, data.name)
         return
@@ -39,7 +40,7 @@ async def rename(data: FileUpdate):
 
 
 @file_router.delete("/{file_path:path}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete(file_path: str):
+async def delete(file_path: str, user: dict = Depends(AuthService.get_current_user)):
     try:
         FileService.delete(file_path)
         return
@@ -50,7 +51,7 @@ async def delete(file_path: str):
 
 
 @file_router.post("/dir", status_code=status.HTTP_204_NO_CONTENT)
-async def create_dir(data: DirIn):
+async def create_dir(data: DirIn, user: dict = Depends(AuthService.get_current_user)):
     try:
         FileService.create_dir(data.base_path, data.dir_name)
         return
@@ -61,7 +62,7 @@ async def create_dir(data: DirIn):
 
 
 @file_router.post("/upload_file", status_code=status.HTTP_204_NO_CONTENT)
-async def upload_file(base_path: str, file: UploadFile = File(...)):
+async def upload_file(base_path: str, file: UploadFile = File(...), user: dict = Depends(AuthService.get_current_user)):
     try:
         await FileService.upload_file(base_path, file)
         return

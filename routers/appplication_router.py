@@ -1,14 +1,14 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
 from pydantics.Application import AppOut
 from services.ApplicationService import ApplicationService
-
+from services.AuthService import AuthService
 
 app_router = APIRouter(tags=["App management"])
 
 
 @app_router.get("/", response_model=List[AppOut])
-async def get_app():
+async def get_app(user: dict = Depends(AuthService.get_current_user)):
     try:
         return ApplicationService.get_all_apps()
     except HTTPException as e:
@@ -18,7 +18,7 @@ async def get_app():
 
 
 @app_router.delete("/{app_name}", status_code=status.HTTP_204_NO_CONTENT)
-async def remove_app(app_name: str):
+async def remove_app(app_name: str, user: dict = Depends(AuthService.get_current_user)):
     try:
         return ApplicationService.remove_app(app_name)
     except HTTPException as e:

@@ -1,14 +1,19 @@
 from fastapi import APIRouter
 from fastapi.websockets import WebSocketDisconnect, WebSocket
 from services.SocketService import SocketService
+from utils.auth import AuthUtil
 
 socket_router = APIRouter(tags=["Socket manager"])
 
 
 @socket_router.websocket("/{token}")
-async def websocket_endpoint(ws: WebSocket, token: int):
-    # todo: verify token here
-    user_id = token
+async def websocket_endpoint(ws: WebSocket, token: str):
+    user = None
+    try:
+        user = AuthUtil.decode_token(token)
+    except Exception:
+        return
+    user_id = user["sub"]
     await ws.accept()
     await SocketService.add_connection(user_id, ws, {"groups": "resource"})
     try:

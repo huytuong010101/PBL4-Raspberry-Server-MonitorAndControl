@@ -9,19 +9,19 @@ class ConnectionManager:
             print(">> Start notify loop")
             asyncio.get_event_loop().create_task(loop_task(self.multicast))
 
-    def add_group(self, user_id: int, new_group: str):
+    def add_group(self, user_id: str, new_group: str):
         if user_id in self.connections:
             self.connections[user_id]["groups"].append(new_group)
 
-    def remove_group(self, user_id: int, group: str):
+    def remove_group(self, user_id: str, group: str):
         if user_id in self.connections:
             self.connections[user_id]["groups"].remove(group)
 
-    def update_group(self, user_id: int, groups: dict):
+    def update_group(self, user_id: str, groups: dict):
         if user_id in self.connections:
             self.connections[user_id]["groups"] = groups
 
-    async def add_connection(self, user_id: int, conn: WebSocket, data: dict = None):
+    async def add_connection(self, user_id: str, conn: WebSocket, data: dict = None):
         self.connections[user_id] = {
             "ws": conn,
             "groups": []
@@ -39,10 +39,10 @@ class ConnectionManager:
         for user_id in self.connections:
             await self.connections[user_id]["ws"].send_json(message)
 
-    async def unicast(self, user_id: int, message: dict):
+    async def unicast(self, user_id: str, message: dict):
         await self.connections[user_id]["ws"].send_json(message)
 
-    def disconnect(self, user_id: int):
+    def disconnect(self, user_id: str):
         if self.connections.get(user_id):
             del self.connections[user_id]
         print(f">> Remove socket of {user_id}")

@@ -10,7 +10,7 @@ class SocketService:
 
     # Router event
     @classmethod
-    async def execute_event(cls, user_id: int, data: str):
+    async def execute_event(cls, user_id: str, data: str):
         # Parse the data
         data = json.loads(data)
         # Selection event function
@@ -21,12 +21,12 @@ class SocketService:
 
     # Process event
     @classmethod
-    async def update_group(cls, user_id: int, data: dict):
+    async def update_group(cls, user_id: str, data: dict):
         if "groups" in data:
             cls.manager.update_group(user_id, data["groups"])
 
     @classmethod
-    async def execute_command(cls, user_id: int, data: dict):
+    async def execute_command(cls, user_id: str, data: dict):
         if "command" in data:
             cwd = "./" if "cwd" not in data else data["cwd"]
             output = subprocess.run(data["command"], cwd=cwd, shell=True, capture_output=True, text=True).stdout
@@ -41,9 +41,9 @@ class SocketService:
 
     # Connection management
     @classmethod
-    async def add_connection(cls, user_id: int, socket: WebSocket, data: dict):
+    async def add_connection(cls, user_id: str, socket: WebSocket, data: dict):
         await cls.manager.add_connection(user_id, socket, data)
 
     @classmethod
-    async def disconnect(cls, user_id: int):
+    async def disconnect(cls, user_id: str):
         cls.manager.disconnect(user_id)
