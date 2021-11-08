@@ -3,6 +3,7 @@ from utils import resource_notify
 from fastapi.websockets import WebSocket
 import json
 import subprocess
+from shelljob import proc
 
 
 class SocketService:
@@ -29,15 +30,19 @@ class SocketService:
     async def execute_command(cls, user_id: str, data: dict):
         if "command" in data:
             cwd = "./" if "cwd" not in data else data["cwd"]
-            output = subprocess.run(data["command"], cwd=cwd, shell=True, capture_output=True, text=True).stdout
-            data = {
-                "event": "response_command",
-                "data": {
-                    "command": output
-                }
+            g = proc.Group()
+            p = g.run(data["command"], shell=True)
+            while g.is_pending():
+                lines = g.readlines()
+                for _, line in lines:
+                    data = {
+                        "event": "response_command",
+                        "data": {
+                            "command": line.decode("utf-8")
+                        }
 
-            }
-            await cls.manager.unicast(user_id, data)
+                    }
+                    await cls.manager.unicast(user_id, data)
 
     # Connection management
     @classmethod
