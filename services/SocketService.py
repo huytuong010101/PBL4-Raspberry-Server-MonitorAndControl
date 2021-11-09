@@ -8,6 +8,7 @@ from shelljob import proc
 
 class SocketService:
     manager = websocket.ConnectionManager(resource_notify.loop_to_notify_resource)
+    command_task = {}
 
     # Router event
     @classmethod
@@ -18,7 +19,7 @@ class SocketService:
         if type(data) is dict and "event" in data and hasattr(cls, data["event"]):
             print(f">> New request from {user_id}: {data['event']}")
             event_func = getattr(cls, data["event"])
-            await event_func(user_id, data["data"])
+            asyncio.get_event_loop().create_task(event_func(user_id, data["data"]))
 
     # Process event
     @classmethod
@@ -28,6 +29,23 @@ class SocketService:
 
     @classmethod
     async def execute_command(cls, user_id: str, data: dict):
+        cls.command_task[user_id] = asyncio.get_event_loop().create_task(cls.create_command_task(user_id, data))
+    
+    @classmethod
+    async def cancel_command(cls, user_id: str, data: dict):
+        if user_id in cls.command_task:
+            cls.command_task[user_id].cancel()
+        data = {
+            "event": "response_command",
+            "data": {
+                "command": "Task was cancel!"
+            }
+
+        }
+        asyncio.get_event_loop().create_task(cls.manager.unicast(user_id, data))
+    
+    @classmethod    
+    async def create_command_task(cls, user_id: str, data: dict):
         if "command" in data:
             cwd = "./" if "cwd" not in data else data["cwd"]
             g = proc.Group()
@@ -43,6 +61,7 @@ class SocketService:
 
                     }
                     asyncio.get_event_loop().create_task(cls.manager.unicast(user_id, data))
+                    await asyncio.sleep(0.01)
 
     # Connection management
     @classmethod

@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from fastapi.websockets import WebSocketDisconnect, WebSocket
 from services.SocketService import SocketService
 from utils.auth import AuthUtil
+import asyncio
 
 socket_router = APIRouter(tags=["Socket manager"])
 
@@ -19,7 +20,7 @@ async def websocket_endpoint(ws: WebSocket, token: str):
     try:
         while True:
             data = await ws.receive_text()
-            await SocketService.execute_event(user_id, data)
+            asyncio.get_event_loop().create_task(SocketService.execute_event(user_id, data))
     except WebSocketDisconnect:
         print(f">> Disconnect to {user_id}:")
         await SocketService.disconnect(user_id)
