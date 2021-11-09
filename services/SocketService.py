@@ -2,7 +2,7 @@ from utils import websocket
 from utils import resource_notify
 from fastapi.websockets import WebSocket
 import json
-import subprocess
+import asyncio
 from shelljob import proc
 
 
@@ -42,7 +42,7 @@ class SocketService:
                         }
 
                     }
-                    await cls.manager.unicast(user_id, data)
+                    asyncio.get_event_loop().create_task(cls.manager.unicast(user_id, data))
 
     # Connection management
     @classmethod
