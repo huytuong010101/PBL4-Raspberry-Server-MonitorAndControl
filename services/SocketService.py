@@ -31,7 +31,7 @@ class SocketService:
         if "command" in data:
             cwd = "./" if "cwd" not in data else data["cwd"]
             g = proc.Group()
-            p = g.run(data["command"], shell=True)
+            p = g.run([data["command"]], shell=True)
             while g.is_pending():
                 lines = g.readlines()
                 for _, line in lines:
