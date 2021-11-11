@@ -4,6 +4,8 @@ from fastapi.websockets import WebSocket
 import json
 import asyncio
 from shelljob import proc
+from services.TrackingService import TrackingService
+from threading import Thread
 
 
 class SocketService:
@@ -30,6 +32,9 @@ class SocketService:
     @classmethod
     async def execute_command(cls, user_id: str, data: dict):
         cls.command_task[user_id] = asyncio.get_event_loop().create_task(cls.create_command_task(user_id, data))
+        # Tracking
+        Thread(target=lambda: TrackingService.add_action(user_id, f"Execute command  {str(data)}")).start()
+        # End tracking
     
     @classmethod
     async def cancel_command(cls, user_id: str, data: dict):

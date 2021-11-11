@@ -42,12 +42,6 @@ class AuthService:
             "is_admin": user.is_admin,
             "avatar": user.avatar
         })
-
-        try:
-            LoginLog.create(user=username)
-        except Exception:
-            pass
-
         return {"access_token": token, "token_type": "bearer"}
 
 

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator, EmailStr
 from typing import Optional
 from datetime import datetime
 from utils.peewee_util import PeeweeGetterDict
@@ -8,8 +8,22 @@ class UserBase(BaseModel):
     username: str
     fullname: str
     avatar: Optional[str] = None
-    email: Optional[str] = None
+    email: Optional[EmailStr] = None
     is_admin: Optional[bool] = False
+
+    @validator("username")
+    def validate_username(cls, value: str):
+        value = value.strip()
+        if len(value) <= 4:
+            raise ValueError("Length of username must greater then 4")
+        return value
+
+    @validator("fullname")
+    def validate_fullname(cls, value: str):
+        value = value.strip()
+        if len(value) == 0:
+            raise ValueError("Fullname is required")
+        return value
 
     class Config:
         orm_mode = True
@@ -36,4 +50,10 @@ class UserUpdate(UserBase):
 class Password(BaseModel):
     old_password: Optional[str] = None
     new_password: str
+
+    @validator("new_password")
+    def password_validate(cls, value):
+        if len(value) <= 4:
+            raise ValueError("Length of password must greater then 4")
+        return value
 

@@ -57,4 +57,8 @@ class UserService:
         data["password"] = AuthUtil.get_password_hash(data["password"])
         User.create(**data)
 
+    @staticmethod
+    def delete(username):
+        User.delete().where(User.username == username).execute()
+
 

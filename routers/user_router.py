@@ -3,7 +3,8 @@ from services.AuthService import AuthService
 from typing import List
 from pydantics.User import UserOut, UserIn, UserUpdate, Password
 from services.UserSerivce import UserService
-from typing import Optional
+from services.TrackingService import TrackingService
+from threading import Thread
 
 user_router = APIRouter(tags=["User info"])
 
@@ -54,7 +55,11 @@ async def change_password(
     if not user["is_admin"] and username != user["sub"]:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
     try:
-        return UserService.change_password(username, password.new_password, password.old_password)
+        UserService.change_password(username, password.new_password, password.old_password)
+        # Tracking
+        Thread(target=lambda: TrackingService.add_action(user["sub"], "Change password of " + username)).start()
+        # End tracking
+        return
     except HTTPException as e:
         raise e
     except Exception as e:
@@ -74,7 +79,11 @@ async def update(
     if not user["is_admin"] and username != data["username"]:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
     try:
-        return UserService.update(username, data)
+        UserService.update(username, data)
+        # Tracking
+        Thread(target=lambda: TrackingService.add_action(user["sub"], "Update " + username)).start()
+        # End tracking
+        return
     except HTTPException as e:
         raise e
     except Exception as e:
@@ -92,11 +101,34 @@ async def create(
     data = data.dict()
     data["created_by"] = user["sub"]
     try:
-        return UserService.create(data)
+        UserService.create(data)
+        # Tracking
+        Thread(target=lambda: TrackingService.add_action(user["sub"], "Create user " + data.get("username"))).start()
+        # End tracking
+        return
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+@user_router.delete("/{username}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_user(
+        username: str,
+        user: dict = Depends(AuthService.get_current_user)):
+    if not user["is_admin"]:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+    try:
+        UserService.delete(username)
+        # Tracking
+        Thread(target=lambda: TrackingService.add_action(user["sub"], "Delete user " + username)).start()
+        # End tracking
+        return
+    except HTTPException as e:
+        raise e
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )

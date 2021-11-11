@@ -1,8 +1,13 @@
 import os
+
+from jose import ExpiredSignatureError, JWTError
+
 from pydantics.File import FileOut
 from fastapi import HTTPException, status, UploadFile
 from fastapi.responses import FileResponse
 import shutil
+from utils.auth import AuthUtil
+from datetime import timedelta
 
 
 class FileService:
@@ -44,12 +49,6 @@ class FileService:
             shutil.rmtree(file_path, ignore_errors=True)
 
     @staticmethod
-    def get_file(file_path: str):
-        if not os.path.isfile(file_path):
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Không tìm thấy tệp tin")
-        return FileResponse(file_path)
-
-    @staticmethod
     def create_dir(base_path: str, dir_name: str):
         full_path = os.path.join(base_path, dir_name)
         if os.path.exists(full_path):
@@ -66,3 +65,31 @@ class FileService:
         content = await file.read()
         with open(full_path, "wb") as f:
             f.write(content)
+
+    @staticmethod
+    async def create_download_token(path):
+        data = {
+            "path": path
+        }
+        return AuthUtil.create_access_token(data, timedelta(minutes=2))
+
+    @staticmethod
+    async def response_file(token: str):
+        try:
+            data = AuthUtil.decode_token(token)
+        except ExpiredSignatureError:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token is expired",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        except JWTError:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not validate credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+        if not os.path.isfile(data.get("path")):
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Không tìm thấy tệp tin")
+        return FileResponse(data.get("path"))
