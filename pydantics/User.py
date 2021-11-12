@@ -42,6 +42,12 @@ class UserOut(UserBase):
 class UserIn(UserBase):
     password: str
 
+    @validator("password")
+    def validate_password(cls, value: str):
+        if len(value) <= 4:
+            raise ValueError("Length of password must greater then 4")
+        return value
+
 
 class UserUpdate(UserBase):
     pass
