@@ -16,6 +16,7 @@ async def create_token(request: Request, form_data: OAuth2PasswordRequestForm = 
     except HTTPException as e:
         raise e
     except Exception as e:
+        print(e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )

@@ -6,11 +6,17 @@ import asyncio
 from shelljob import proc
 from services.TrackingService import TrackingService
 from threading import Thread
+import paramiko
+
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+ssh.connect('127.0.0.1', username='pi', password='pi')
 
 
 class SocketService:
     manager = websocket.ConnectionManager(resource_notify.loop_to_notify_resource)
     command_task = {}
+    session = {}
 
     # Router event
     @classmethod
@@ -30,7 +36,25 @@ class SocketService:
             cls.manager.update_group(user_id, data["groups"])
 
     @classmethod
+    async def connect_ssh(cls, user_id: str, data: dict):
+        # init session if not yet
+        if user_id in cls.session:
+            cls.session[user_id].close()
+        cls.session[user_id] = ssh.invoke_shell()
+        await asyncio.sleep(0.3)
+        while cls.session[user_id].recv_ready():
+            data = {
+                "event": "response_command",
+                "data": {
+                    "command": cls.session[user_id].recv(1024).decode("utf-8")
+                }
+
+            }
+            asyncio.get_event_loop().create_task(cls.manager.unicast(user_id, data))
+
+    @classmethod
     async def execute_command(cls, user_id: str, data: dict):
+        # start a command
         cls.command_task[user_id] = asyncio.get_event_loop().create_task(cls.create_command_task(user_id, data))
         # Tracking
         Thread(target=lambda: TrackingService.add_action(user_id, f"Execute command  {str(data)}")).start()
@@ -40,33 +64,40 @@ class SocketService:
     async def cancel_command(cls, user_id: str, data: dict):
         if user_id in cls.command_task:
             cls.command_task[user_id].cancel()
-        data = {
-            "event": "response_command",
-            "data": {
-                "command": "Task was cancel!"
-            }
+        if user_id in cls.session:
+            cls.session[user_id].close()
+        cls.session[user_id] = ssh.invoke_shell()
+        if cls.session[user_id].recv_ready():
+            data = {
+                "event": "response_command",
+                "data": {
+                    "command": cls.session[user_id].recv(1024).decode("utf-8")
+                }
 
-        }
-        asyncio.get_event_loop().create_task(cls.manager.unicast(user_id, data))
+            }
+            asyncio.get_event_loop().create_task(cls.manager.unicast(user_id, data))
     
     @classmethod    
     async def create_command_task(cls, user_id: str, data: dict):
         if "command" in data:
             cwd = "./" if "cwd" not in data else data["cwd"]
-            g = proc.Group()
-            p = g.run([data["command"]], shell=True)
-            while g.is_pending():
-                lines = g.readlines()
-                for _, line in lines:
+            while cls.session[user_id].recv_ready(): cls.session[user_id].recv(1024)
+            cls.session[user_id].send(data["command"] + "\n")
+            while True:
+                if cls.session[user_id].recv_ready():
+                    receive = cls.session[user_id].recv(1024).decode("utf-8")
+                    print(receive)
                     data = {
                         "event": "response_command",
                         "data": {
-                            "command": line.decode("utf-8")
+                            "command": receive
                         }
 
                     }
                     asyncio.get_event_loop().create_task(cls.manager.unicast(user_id, data))
                     await asyncio.sleep(0.01)
+                    if "pi@pi" in receive or receive.strip("\n").strip() == "":
+                        break
 
     # Connection management
     @classmethod
@@ -76,3 +107,7 @@ class SocketService:
     @classmethod
     async def disconnect(cls, user_id: str):
         cls.manager.disconnect(user_id)
+        if user_id in cls.command_task:
+            cls.command_task[user_id].cancel()
+        if user_id in cls.session:
+            cls.session[user_id].close()
