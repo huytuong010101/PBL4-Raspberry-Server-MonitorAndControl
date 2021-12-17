@@ -1,0 +1,90 @@
+:root {
+    --box-bg-app: linear-gradient(0deg, rgba(219, 93, 131, 0.247), rgba(247, 182, 62, 0.233));
+}
+
+.dark {
+    --box-shadow: rgba(75, 58, 58, 0.575);
+    --box-bg-app: linear-gradient(0deg, rgb(219, 93, 93), rgba(rgb(247, 182, 62)));
+}
+
+.app-content {
+    background: var(--box-bg-app);
+    height: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 20px;
+    box-shadow: 2px 2px 10px var(--box-shadow);
+    padding: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.app-content:hover {
+    transform: scale(1.02);
+    transition: 0.3s ease-in-out;
+}
+
+.app-content-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 70%;
+    margin: 0.5rem;
+    width: 100%;
+}
+
+.app-content-icon {
+    background-color: #b94c5b75;
+    width: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    /* color:#866284; */
+    border-radius: 15px;
+}
+
+.app-content-name {
+    /* color:#6e5062; */
+    font-weight: 700;
+    font-size: 1rem;
+    max-width: 100%;
+}
+
+.app-content-info {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+    min-width: max-content;
+}
+
+.app-contain-btn {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-self: center;
+    margin-left: 0.3rem;
+}
+
+.app-btn {
+    background: #db6a86b0;
+    outline: none;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 10px;
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+input.app-btn:nth-child(2):hover {
+    cursor: pointer;
+    background:#d4778f;
+    transition: 0.2s ease-in-out;
+    color: #ffffff;
+    font-size: 0.95rem;
+}
+

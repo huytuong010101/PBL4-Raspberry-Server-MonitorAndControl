@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.staticfiles import StaticFiles
+
 from routers import file_router, socket_router, appplication_router, auth_router, user_router, tracking_router
 
 
@@ -14,9 +15,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# Template
-templates = Jinja2Templates(directory="templates")
-
+# Static service
+app.mount("/static", StaticFiles(directory="templates"), name="static")
 # Include router
 app.include_router(socket_router.socket_router)
 app.include_router(file_router.file_router, prefix="/files")
@@ -27,8 +27,13 @@ app.include_router(tracking_router.tracking_router, prefix="/tracking")
 
 
 # Home page
-@app.get("/", response_class=HTMLResponse)
-async def read_item(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+@app.get("/")
+async def home():
+    return FileResponse("./templates/index.html")
 
+
+# Login page
+@app.get("/login")
+async def home(request: Request):
+    return FileResponse("./templates/login.html")
 

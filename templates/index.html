@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PBL4: OS - Network Programming</title>
+    <link rel="shortcut icon" href="https://i.pinimg.com/originals/6e/de/a8/6edea84dffc69d2c190c427be484143c.png" type="image/png">
+    <!-- Google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital, 
+        wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <!-- BoxIcons -->
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <!-- App CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="/static/css/grid.css">
+    <link rel="stylesheet" href="/static/css/app.css">
+    <link rel="stylesheet" href="/static/css/terminal.css">
+    <link rel="stylesheet" href="/static/css/application.css">
+    <link rel="stylesheet" href="/static/css/file.css">
+    <link rel="stylesheet" href="/static/css/profile.css">
+    <link rel="stylesheet" href="/static/css/user-manage.css">
+    <link rel="stylesheet" href="/static/css/tracking.css">
+</head>
+
+<body>
+    <!-- Loading -->
+    <div class="loader_bg">
+        <div class="loader"></div>
+    </div>
+    <!-- End Loading -->
+
+    <!-- Profile Modal -->
+    <div class="modal hide">
+        <div class="modal-body">
+            <div class="profile">
+                <span class="close-profile">
+                    &times;
+                </span>
+                <div class="login-avatar">
+                    <img src="/static/images/raspberry.png" class="rasp-img" alt="avatar">
+                </div>
+                <h1>Your Profile </h1>
+                <form action="" method="post" class="profile-info__form">
+                    <div class="profile-info__group">
+                        <label for="username" class="profile-info__label">Username</label>
+                        <input type="text" name="username" id="username" class="profile-info__control" value="hana8601"
+                            disabled>
+                    </div>
+                    <div class="profile-info__group">
+                        <label for="fullname" class="profile-info__label">Fullname</label>
+                        <input type="text" name="fullname" id="fullname" class="profile-info__control"
+                            autocomplete="off">
+                    </div>
+                    <div class="profile-info__group">
+                        <label for="email" class="profile-info__label">Email</label>
+                        <input type="email" name="email" id="email" class="profile-info__control" autocomplete="off">
+                    </div>
+                    <div class="profile-info__group">
+                        <label for="is-admin" class="profile-info__label">Admin</label>
+                        <div class="checkbox">
+                            <input type="checkbox" name="isAdmin" id="is-admin"
+                                class="profile-info__control profile-info__control-other" checked disabled>
+                            <span class="checkmark"></span>
+                        </div>
+                    </div>
+                    <div class="profile-info__group">
+                        <label class="profile-info__label">Created at</label>
+                        <span class="profile-info__control profile-info__control-other" id="created_at">---</span>
+                    </div>
+                    <div class="profile-info__group">
+                        <input type="submit" id="btn-save-profile" value="Save" class="btn-profile">
+                        <input type="reset" value="Reset" class="btn-profile">
+                    </div>
+                </form>
+                <form action="" method="post" class="profile-info__form">
+                    <div class="profile-info__group">
+                        <label for="old-pwd" class="profile-info__label">Password</label>
+                        <input type="password" name="old-pwd" id="old-pwd" class="profile-info__control">
+                    </div>
+                    <div class="profile-info__group">
+                        <label for="new-pwd" class="profile-info__label">New password</label>
+                        <input type="password" name="new-pwd" id="new-pwd" class="profile-info__control"
+                            autocomplete="off">
+                    </div>
+                    <div class="profile-info__group">
+                        <label for="re-pwd" class="profile-info__label">Confirm password</label>
+                        <input type="password" name="re-pwd" id="re-pwd" class="profile-info__control"
+                            autocomplete="off">
+                    </div>
+                    <div class="profile-info__group">
+                        <input type="submit" id="btn-change-password" value="Save password" class="btn-profile">
+                        <input type="reset" value="Reset" class="btn-profile">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- End Profile Modal -->
+
+    <div class="app">
+        <!-- SideBar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <img src="/static/images/raspberry.png" alt="">
+                <div class="sidebar-logo-name">PiS</div>
+                <div class="sidebar-close" id="sidebar-close">
+                    <i class='bx bx-left-arrow-alt'></i>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <a href="#" class="sidebar-user-info">
+                    <img src="/static/images/user.png" alt="User picture" class="profile-image">
+                    <div class="sidebar-user-name" id="current-name">---</div>
+                </a>
+                <button class="btn btn-outline" id="btn-logout">
+                    <i class='bx bx-log-out bx-rotate-180'></i>
+                </button>
+            </div>
+
+            <!-- Sidebar Menu -->
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="#" class="active">
+                        <i class='bx bx-data'></i>
+                        <span>Resource management</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class='bx bx-file'></i>
+                        <span>File management</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class='bx bx-extension'></i>
+                        <span>Application management</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class='bx bx-terminal'></i>
+                        <span>Controlling via Terminal</span>
+                    </a>
+                </li>
+
+                <li class="admin-feature">
+                    <a href="#" class="user-management">
+                        <i class='bx bxs-user-detail'></i>
+                        <span>User Management</span>
+                    </a>
+                </li>
+
+                <li class="admin-feature">
+                    <a href="#">
+                        <i class='bx bx-history'></i>
+                        <span>Resource Tracking</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-submenu">
+                    <a href="#" class="sidebar-menu-dropdown">
+                        <i class='bx bx-cog'></i>
+                        <span>Settings</span>
+                        <div class="dropdown-icon"></div>
+                    </a>
+                    <ul class="sidebar-menu sidebar-menu-dropdown-content">
+                        <li>
+                            <a href="#" class="darkmode-toggle" id="darkmode-toggle">
+                                Dark Mode
+                                <span class="darkmode-switch"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- End Sidebar Menu -->
+        </div>
+        <!-- End SideBar -->
+
+        <!-- Main Content Resource -->
+        <div class="main active">
+            <div class="main-header">
+                <div class="mobile-toggle" class="mobile-toggle">
+                    <i class='bx bx-menu-alt-right'></i>
+                </div>
+                <div class="main-title">
+                    RESOURCE MANAGEMENT
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="item-resource-title">
+                            <i class='bx bxs-chip'></i>
+                            CPU Performance
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="box box-hover box-first">
+                            <div class="progress-circle">
+                                <div id="chart-total-cpu">
+                                </div>
+                                <div class="progress-circle-title">
+                                    CPU Total Performance
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="box box-hover box-first">
+                            <!-- Counter -->
+                            <div class="counter">
+                                <i class='bx bxs-hot fire'></i>
+                                <div class="counter-title">
+                                    CPU temperature
+                                </div>
+                                <div class="counter-info">
+                                    <div class="counter-count">
+                                        <span id="temperature">--</span>
+                                        <span> degree</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Counter -->
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-12 col-sm-12">
+                        <div class="box box-hover box-second">
+                            <div id="linechart-cpu">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- Core CPU Performance -->
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="box box-hover">
+                            <div class="progress-circle">
+                                <div id="chart-core-cpu">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="box box-hover">
+                            <div class="progress-circle">
+                                <div id="chart-core-cpu">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="box box-hover">
+                            <div class="progress-circle">
+                                <div id="chart-core-cpu">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="box box-hover">
+                            <div class="progress-circle">
+                                <div id="chart-core-cpu">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Core CPU Performance -->
+                </div>
+
+                <div class="row">
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="item-resource-title">
+                            <i class='bx bx-network-chart'></i>
+                            Network Traffic
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="box box-hover">
+                            <!-- Counter -->
+                            <div class="counter">
+                                <i class='bx bxs-send fire'></i>
+                                <div class="counter-title">
+                                    Network Send
+                                </div>
+                                <div class="counter-info">
+                                    <div id="network-send" class="counter-count">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Counter -->
+                        </div>
+                    </div>
+
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="box box-hover">
+                            <!-- Counter -->
+                            <div class="counter">
+                                <i class='bx bxs-share fire'></i>
+                                <div class="counter-title">
+                                    Network Receive
+                                </div>
+                                <div class="counter-info">
+                                    <div id="network-receive" class="counter-count">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Counter -->
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-12 col-sm-12">
+                        <div class="box box-hover box-second">
+                            <div id="linechart-network">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="item-resource-title">
+                            <i class='bx bx-disc'></i>
+                            Disk Space
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- Disk Space -->
+                    <div class="col-2 col-md-6 col-sm-12">
+                        <div class="box box-hover">
+                            <div class="progress-circle">
+                                <div id="chart-diskspace">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 col-md-6 col-sm-12">
+                        <div class="box box-hover">
+                            <div class="progress-circle">
+                                <div id="chart-diskspace">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Disk Space -->
+                </div>
+
+                <div class="row">
+                    <!-- RAM -->
+                    <div class="col-4 col-md-6 col-sm-12">
+                        <div class="item-resource-title">
+                            <i class='bx bx-hdd'></i>
+                            RAM Performance
+                        </div>
+                    </div>
+                    <!-- End RAM -->
+                    <!-- SWAP -->
+                    <div class="col-4 col-md-6 col-sm-12">
+                        <div class="item-resource-title">
+                            <i class='bx bxs-analyse'></i>
+                            SWAP Performance
+                        </div>
+                    </div>
+                    <!-- End SWAP -->
+                </div>
+
+                <div class="row">
+                    <!-- RAM -->
+                    <div class="col-4 col-md-6 col-sm-12">
+                        <div class="box box-hover">
+                            <div class="progress-circle">
+                                <div id="chart-circle">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End RAM -->
+                    <!-- SWAP -->
+                    <div class="col-4 col-md-6 col-sm-12">
+                        <div class="box box-hover">
+                            <div class="progress-circle">
+                                <div id="chart-circle">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End SWAP -->
+                    <div class="col-4 col-md-6 col-sm-12"></div>
+                </div>
+
+            </div>
+        </div>
+        <!-- End Main Content Resource -->
+
+        <!-- Main Content File -->
+        <div class="main">
+            <div class="main-header">
+                <div class="mobile-toggle" class="mobile-toggle">
+                    <i class='bx bx-menu-alt-right'></i>
+                </div>
+                <div class="main-title">
+                    FILE MANAGEMENT
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-12 col-md-12 col-sm-12">
+                        <div class="path" id="current-path">
+                            /
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="btn-container">
+                        <button class="file-btn btn-back" id="back-btn">
+                            <i class='bx bx-arrow-back'></i>
+                            Back
+                        </button>
+                        <button onclick="document.querySelector('#file-upload').click()" class="file-btn btn-upload"
+                            id="upload-btn">
+                            <i class='bx bxs-cloud-upload'></i>
+                            Upload File
+                        </button>
+                        <form id="upload-form" action="">
+                            <input type="file" name="file" id="file-upload" style="display:none">
+                            <input type="hidden" id="upload-path" name="base_path">
+                        </form>
+
+                        <button class="file-btn btn-create" id="make-dir-btn">
+                            <i class='bx bxs-folder-plus'></i>
+                            Create new folder
+                        </button>
+                    </div>
+                </div>
+                <div class="row" id="list-file">
+                </div>
+            </div>
+        </div>
+        <!-- End Main Content File -->
+
+        <!-- Main Content Application-->
+        <div class="main">
+            <div class="main-header">
+                <div class="mobile-toggle" class="mobile-toggle">
+                    <i class='bx bx-menu-alt-right'></i>
+                </div>
+                <div class="main-title">
+                    APPLICATION MANAGEMENT
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="row" id="all-apps">
+                </div>
+            </div>
+        </div>
+        <!-- End Main Content Application-->
+
+        <!-- Main Content Terminal -->
+        <div class="main">
+            <div class="main-header">
+                <div class="mobile-toggle" class="mobile-toggle">
+                    <i class='bx bx-menu-alt-right'></i>
+                </div>
+                <div class="main-title">
+                    CONTROLLING VIA TERMINAL
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="item-resource-title">
+                            <i class='bx bx-terminal'></i>
+                            Terminal
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-12 col-sm-12">
+                        <div class="terminal-container">
+                            <div id="terminal-screen" class="terminal-screen">
+                                <div class="terminal-command" id="terminal-content">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-12 col-sm-12">
+                        <div class="item-resource-title-input">
+                            <div class="text-terminal">
+                                <i class='bx bxs-keyboard text-terminal-icon'></i>
+                                Type your input here:
+                            </div>
+                            <!-- <button id="btn-cancel">Cancel</button> -->
+                            <input class="terminal-input" type="text" name="" id="terminal-input">
+                            <button id="btn-cancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Main Content Terminal -->
+
+        <!-- Main User Management -->
+        <div class="main">
+            <div class="main-header">
+                <div class="mobile-toggle" class="mobile-toggle">
+                    <i class='bx bx-menu-alt-right'></i>
+                </div>
+                <div class="main-title">
+                    USER MANAGEMENT
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="item-resource-title">
+                            <i class='bx bxs-user-detail'></i>
+                            User List
+                        </div>
+                    </div>
+                    <div class="col-3 col-md-6 col-sm-12 user-header">
+                        <div class="add-user">
+                            <a href="" class="btn-user btn-add">
+                                <i class='bx bxs-user-plus' style="font-size: 2rem; margin-right: 7px;"></i>
+                                Add user
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-12 col-sm-12">
+                        <div class="user-management-content">
+                            <table class="user-table">
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add form modal -->
+        <div class="modal-add-user hide">
+            <div class="modal-add-user-body">
+                <div class="profile-add-user">
+                    <span class="close-profile-add-user">
+                        &times;
+                    </span>
+                    <div class="login-avatar">
+                        <img src="/static/images/raspberry.png" class="rasp-img" alt="avatar">
+                    </div>
+                    <h1>Add User</h1>
+                    <form action="" method="post" class="profile-info__form" id="add-user-form">
+                        <div class="profile-info__group">
+                            <label for="username" class="profile-info__label">Username</label>
+                            <input type="text" name="username" id="add-username" class="profile-info__control"
+                                autocomplete="off">
+                            <p class="breaker"></p>
+                            <span class="error-message"></span>
+                        </div>
+                        <div class="profile-info__group">
+                            <label for="fullname" class="profile-info__label">Fullname</label>
+                            <input type="text" name="fullname" id="add-fullname" class="profile-info__control"
+                                autocomplete="off">
+                            <p class="breaker"></p>
+                            <span class="error-message"></span>
+                        </div>
+                        <div class="profile-info__group">
+                            <label for="email" class="profile-info__label">Email</label>
+                            <input type="email" name="email" id="add-email" class="profile-info__control"
+                                autocomplete="off">
+                            <p class="breaker"></p>
+                            <span class="error-message"></span>
+                        </div>
+                        <div class="profile-info__group">
+                            <label for="new-pwd" class="profile-info__label">Password</label>
+                            <input type="password" name="pwd" id="add-pwd" class="profile-info__control"
+                                autocomplete="off">
+                            <p class="breaker"></p>
+                            <span class="error-message"></span>
+                        </div>
+                        <div class="profile-info__group">
+                            <label for="re-pwd" class="profile-info__label">Confirm password</label>
+                            <input type="password" name="re-pwd" id="add-re-pwd" class="profile-info__control"
+                                autocomplete="off">
+                            <p class="breaker"></p>
+                            <span class="error-message"></span>
+                        </div>
+                        <div class="profile-info__group">
+                            <label for="is-admin" class="profile-info__label">Admin</label>
+                            <label class="checkbox" for="add-is-admin">
+                                <input type="checkbox" name="isAdmin" id="add-is-admin"
+                                    class="profile-info__control profile-info__control-other">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="profile-info__group">
+                            <input type="submit" id="add-btn-save-profile" value="Save" class="btn-profile"
+                                onclick="addUser(event)">
+                            <input type="reset" value="Reset" class="btn-profile">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- End add form modal -->
+
+        <!-- Update form modal -->
+        <div class="modal-user hide">
+            <div class="modal-user-body">
+                <div class="profile-user">
+                    <span class="close-profile-user">
+                        &times;
+                    </span>
+                    <div class="login-avatar">
+                        <img src="/static/images/raspberry.png" class="rasp-img" alt="avatar">
+                    </div>
+                    <h1>User Profile </h1>
+                    <form action="" method="post" class="profile-info__form" id="update-info-form">
+                        <div class="profile-info__group">
+                            <label for="username" class="profile-info__label">Username</label>
+                            <input type="text" name="username" id="update-username" class="profile-info__control"
+                                disabled>
+                        </div>
+                        <div class="profile-info__group">
+                            <label for="fullname" class="profile-info__label">Fullname</label>
+                            <input type="text" name="fullname" id="update-fullname" class="profile-info__control"
+                                autocomplete="off">
+                            <p class="breaker"></p>
+                            <span class="error-message"></span>
+                        </div>
+                        <div class="profile-info__group">
+                            <label for="email" class="profile-info__label">Email</label>
+                            <input type="email" name="email" id="update-email" class="profile-info__control"
+                                autocomplete="off">
+                            <p class="breaker"></p>
+                            <span class="error-message"></span>
+                        </div>
+                        <div class="profile-info__group">
+                            <label for="is-admin" class="profile-info__label">Admin</label>
+                            <label class="checkbox" for="update-is-admin">
+                                <input type="checkbox" name="isAdmin" id="update-is-admin"
+                                    class="profile-info__control profile-info__control-other">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="profile-info__group">
+                            <label class="profile-info__label">Created at</label>
+                            <span class="profile-info__control profile-info__control-other"
+                                id="update-created_at">---</span>
+                        </div>
+                        <div class="profile-info__group">
+                            <input type="submit" id="update-btn-save-profile" value="Save" class="btn-profile">
+                            <input type="reset" value="Reset" class="btn-profile">
+                        </div>
+                    </form>
+                    <form action="" method="post" class="profile-info__form" id="change-password-form">
+                        <div class="profile-info__group">
+                            <label for="new-pwd" class="profile-info__label">New password</label>
+                            <input type="password" name="new-pwd" id="update-new-pwd" class="profile-info__control"
+                                autocomplete="off">
+                            <p class="breaker"></p>
+                            <span class="error-message"></span>
+                        </div>
+                        <div class="profile-info__group">
+                            <label for="re-pwd" class="profile-info__label">Confirm password</label>
+                            <input type="password" name="re-pwd" id="update-re-pwd" class="profile-info__control"
+                                autocomplete="off">
+                            <p class="breaker"></p>
+                            <span class="error-message"></span>
+                        </div>
+                        <div class="profile-info__group">
+                            <input type="submit" id="update-btn-change-password" value="Save password"
+                                class="btn-profile">
+                            <input type="reset" value="Reset" class="btn-profile">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- End update form modal -->
+
+        <!-- End Main User Management -->
+
+        <!-- Main Resource Tracking -->
+        <div class="main">
+            <div class="main-header">
+                <div class="mobile-toggle" class="mobile-toggle">
+                    <i class='bx bx-menu-alt-right'></i>
+                </div>
+                <div class="main-title">
+                    RESOURCE TRACKING
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="item-resource-title">
+                            <i class='bx bxs-user-detail'></i>
+                            Action List
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5 col-md-6 col-sm-12">
+                        <div class="item-resource-title resource-datetimepicker">
+                            <label for=""><i class='bx bx-calendar-check datetimepicker-icon'></i>Time start</label>
+                            <input type="datetime-local" class="datetimepicker" id="time-start-action">
+                        </div>
+                    </div>
+                    <div class="col-5 col-md-6 col-sm-12">
+                        <div class="item-resource-title resource-datetimepicker">
+                            <label for=""><i class='bx bx-calendar-x datetimepicker-icon'></i>Time end  </label>
+                            <input type="datetime-local" class="datetimepicker" id="time-end-action">
+                        </div>
+                    </div>
+                    <div class="col-2 col-md-3 col-sm-12 tracking-item">
+                        <a id="btn-filter-action" class="tracking-btn">
+                            <i class='bx bx-search'></i>
+                            Filter
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-12 col-sm-12">
+                        <div class="user-management-content" id="table-action-content">
+                            <table class="user-table" id="table-action">
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------------------------>
+                <div class="row">
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="item-resource-title">
+                            <i class='bx bxs-user-detail'></i>
+                            Login Logs
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5 col-md-6 col-sm-12">
+                        <div class="item-resource-title resource-datetimepicker">
+                            <label for=""><i class='bx bx-calendar-check datetimepicker-icon'></i>Time start</label>
+                            <input type="datetime-local" class="datetimepicker" id="time-start-login">
+                        </div>
+                    </div>
+                    <div class="col-5 col-md-6 col-sm-12">
+                        <div class="item-resource-title resource-datetimepicker">
+                            <label for=""><i class='bx bx-calendar-x datetimepicker-icon'></i>Time end</label>
+                            <input type="datetime-local" class="datetimepicker" id="time-end-login">
+                        </div>
+                    </div>
+                    <div class="col-2 col-md-3 col-sm-12 tracking-item">
+                        <a id="btn-filter-login" class="tracking-btn">
+                            <i class='bx bx-search'></i>
+                            Filter
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-12 col-sm-12">
+                        <div class="user-management-content" id="table-login-content">
+                            <table class="user-table" id="table-login">
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------------------------>
+                <div class="row">
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="item-resource-title">
+                            <i class='bx bxs-user-detail'></i>
+                            Resource 
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5 col-md-6 col-sm-12">
+                        <div class="item-resource-title resource-datetimepicker">
+                            <label for=""><i class='bx bx-calendar-check datetimepicker-icon'></i>Time start</label>
+                            <input type="datetime-local" class="datetimepicker" id="time-start-resource">
+                        </div>
+                    </div>
+                    <div class="col-5 col-md-6 col-sm-12">
+                        <div class="item-resource-title resource-datetimepicker">
+                            <label for=""><i class='bx bx-calendar-x datetimepicker-icon'></i>Time end</label>
+                            <input type="datetime-local" class="datetimepicker" id="time-end-resource">
+                        </div>
+                    </div>
+                    <div class="col-2 col-md-3 col-sm-12 tracking-item">
+                        <a id="btn-filter-resource" class="tracking-btn">
+                            <i class='bx bx-search'></i>
+                            Filter
+                        </a>
+                    </div>
+                </div>
+                <div class="row" id="resoure-content">
+                    
+                </div>
+                <!------------------------------------------------------>
+
+            </div>
+        </div>
+        <!-- End Main Resource Tracking -->
+
+    </div>
+
+
+    <div class="overlay"></div>
+    <!-- Script -->
+    <!-- SweetAlert -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- Apex Charts -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/static/js/login_require.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-loading-overlay@1.1.0/dist/js-loading-overlay.min.js"></script>
+    <script src="/static/js/ansi_up.js"></script>
+    <!-- App JS -->
+    <script src="/static/js/loading-overlay.js"></script>
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/resource.js"></script>
+    <script src="/static/js/websocket.js"></script>
+    <script src="/static/js/validateForm.js"></script>
+    <script src="/static/js/file-manager.js"></script>
+    <script src="/static/js/application-manager.js"></script>
+    <script src="/static/js/profile.js"></script>
+    <script src="/static/js/admin.js"></script>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,122 @@
+.user-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 1.1rem;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 10px;
+}
+
+tbody {
+    overflow-y: scroll;
+}
+
+thead>th {
+    background-color: #b95067;
+    color: white;
+}
+
+tbody>tr:nth-child(even) {
+    background: rgba(142, 163, 255, 0.295);
+}
+
+tbody>tr:nth-child(odd) {
+    background: rgba(255, 177, 177, 0.295);
+}
+
+.resource-datetimepicker>label {
+    font-size: 1.1rem;
+    width: 110px;
+}
+
+.resource-datetimepicker {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    background: #e4787883;
+    padding: 10px 20px;
+    box-shadow: 0.3px 0.3px 5px #663b3b41;
+}
+
+input[type="datetime-local"] {
+    background: #b67a7a57;
+    color: #ffffff;
+    font-size: 15px;
+    border: 3px solid #663b3b15;
+    outline: none;
+    border-radius: 10px;
+    padding-left: 5px;
+}
+
+::-webkit-calendar-picker-indicator {
+    background-color: #ffffff;
+    padding: 3px;
+    cursor: pointer;
+    border-radius: 7px;
+}
+
+.tracking-item {
+    margin-left: auto;
+}
+
+.tracking-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: 10px 23px;
+    background: #cf6464;
+    color: #ffffff;
+    border-radius: 13px;
+    box-shadow: 1px 1px 5px #86444480;
+}
+
+.tracking-btn:hover {
+    background: #b15656;
+    cursor: pointer;
+    transition: 0.1s ease-in-out;
+}
+
+.datetimepicker {
+    margin-left: auto;
+}
+
+.datetimepicker-icon {
+    margin-right: 5px;
+}
+
+#table-action-content.active,
+#table-login-content.active {
+    height: 490px;
+    overflow-y: auto;
+}
+
+#table-action-content.active thead th,
+#table-login-content.active thead th {
+    position: sticky;
+    top: 0;
+}
+
+#table-action-content::-webkit-scrollbar-thumb,
+#table-login-content::-webkit-scrollbar-thumb {
+    background: #a3637194;
+    border-radius: 10px;
+}
+
+@media only screen and (max-width: 1330px) {
+    .datetimepicker {
+        margin-left: 0;
+    }
+}
+
+@media only screen and (max-width: 1280px) {
+    .datetimepicker {
+        margin-left: auto;
+    }
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <title>Login</title>
+    <link rel="shortcut icon" href="https://i.pinimg.com/originals/6e/de/a8/6edea84dffc69d2c190c427be484143c.png" type="image/png">
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <div class="login-avatar">
+                <img src="/static/images/raspberry.png" class="rasp-img" alt="avatar">
+            </div>
+            <h1>Login Here</h1>
+            <form action="">
+                <p>Username</p>
+                <input type="text" required name="" id="username" placeholder="Enter username" autocomplete="off">
+                <p>Password</p>
+                <input type="password" required name="" id="password" placeholder="Enter password">
+                <input id="btn-login" type="submit" value="Login">
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/login.js"></script>
+</body>
+</html>

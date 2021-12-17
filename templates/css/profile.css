@@ -1,0 +1,204 @@
+.modal, .modal-user, .modal-add-user {
+    position: fixed;
+    z-index: 9;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    background-color: #00000090;
+}
+
+.modal.hide, .modal-user.hide, .modal-add-user.hide {
+    display: none;
+}
+
+.modal-body, .modal-user-body, .modal-add-user-body {
+    z-index: 10;
+    margin: auto;
+}
+
+.profile, .profile-user, .profile-add-user{
+    background-color: rgb(17, 9, 14);
+    border-radius: 15px;
+    box-shadow: 2px 2px 15px rgba(25, 14, 29, 0.87);
+    position: relative;
+}
+
+.close-profile, .close-profile-user, .close-profile-add-user {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.rasp-img {
+    width: 50px;
+    height: 50px;
+}
+
+.login-avatar {
+    border-radius: 50%;
+    background-color: rgb(175, 119, 145);
+    width: 70px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: -35px;
+    left: calc(50% - 35px);
+    box-shadow: 2px 2px 15px rgba(25, 14, 29, 0.87);
+}
+
+.profile h1, .profile-user h1, .profile-add-user h1 {
+    margin: 0;
+    text-align: center;
+    font-size: 2rem;
+    color: #fff;
+}
+
+.profile-info__form {
+    padding: 10px 40px 0 40px;
+}
+
+.profile-info__form + .profile-info__form {
+    padding: 20px 40px;
+}
+
+.profile-info__group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.breaker {
+    display: block;
+    width: 100%;
+    height: 0;
+}
+
+#add-user-form, #update-info-form, #change-password-form {
+    width: 500px;
+}
+
+.profile-info__group.invalid .error-message {
+    display: block;
+}
+
+.error-message {
+    display: none;
+    padding-top: 8px;
+    transform: translateX(24%);
+}
+
+.profile-info__label {
+    min-width: 130px;
+    color: #ffffff99;
+}
+
+.profile-info__control {
+    margin-left: 20px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background: rgba(175, 119, 145, 0.164);
+    color: rgb(255, 209, 209) !important;
+    font-size: 1rem;
+    padding: 5px 10px;
+    min-width: 250px;
+}
+
+.profile-info__control-other {
+    text-align: center;
+    background: none;
+}
+
+.checkbox {
+    min-width: 250px;
+    margin-left: 20px;
+    position: relative;
+}
+
+.checkbox:hover{
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    left: 110px;
+    height: 1.6rem;
+    width: 1.6rem;
+    background-color: rgba(175, 119, 145, 0.781);
+    border-radius: 5px;
+    transform: translateY(-10px);
+}
+
+input[type="checkbox"]:checked ~ .checkmark {
+    background-color: rgb(175, 119, 145);
+    border-radius: 5px;
+}
+
+.checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+input[type="checkbox"]:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkmark::after {
+    left: 8px;
+    top: 4px;
+    width: 5px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.btn-profile {
+    border: none;
+    outline: none;
+    height: 40px;
+    background: rgb(175, 119, 145);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 20px;
+    padding: 10px 25px;
+}
+
+.btn-profile:hover {
+    cursor: pointer;
+    background: rgb(247, 151, 196);
+    color: rgba(0, 0, 0, 0.801);
+    transition: .3s ease-in-out;
+}
+
+.profile-add-user {
+    padding-bottom: 20px;
+}
+
+.user-header {
+    margin-left: auto;
+}
