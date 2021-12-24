@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
+from database import database as db
 
 from routers import file_router, socket_router, appplication_router, auth_router, user_router, tracking_router
 
@@ -34,6 +35,10 @@ async def home():
 
 # Login page
 @app.get("/login")
-async def home(request: Request):
+async def home():
     return FileResponse("./templates/login.html")
+
+@app.on_event('shutdown')
+async def shutdown():
+    await db.disconnect()
 

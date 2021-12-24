@@ -1,4 +1,4 @@
-HOST = "42.119.188.219"
+HOST = "183.80.227.158"
 PORT = 8000
 
 const showError = (detail, title) => {

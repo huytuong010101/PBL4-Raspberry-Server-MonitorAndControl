@@ -9,6 +9,7 @@ class AuthUtil:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
     SECRET_KEY = os.environ["SECRET_KEY"]
     ALGORITHM = os.environ["ALGORITHM"]
+    EXP = int(os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"])
 
     @classmethod
     def verify_password(cls, plain_password, hashed_password):
@@ -23,7 +24,7 @@ class AuthUtil:
         if expires_delta:
             expire = datetime.utcnow() + expires_delta
         else:
-            expire = datetime.utcnow() + timedelta(minutes=5)
+            expire = datetime.utcnow() + timedelta(minutes=cls.EXP)
         to_encode.update({"exp": expire})
         encoded_jwt = jwt.encode(to_encode, cls.SECRET_KEY, algorithm=cls.ALGORITHM)
         return encoded_jwt
