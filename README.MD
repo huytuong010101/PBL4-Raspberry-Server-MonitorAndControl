@@ -8,7 +8,7 @@
 - Run server: `python main.py`
 
 ## Result 
-- [Demo video](https://youtu.be/l7RvHa5e4Wc)
+- [Demo video](https://youtu.be/rsIklOp8tVY)
 - [Report](https://github.com/huytuong010101/PBL4-Raspberry-Server-ControlAndTracking/blob/main/PBL4-Report.pdf)
 
 ## Member
