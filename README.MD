@@ -9,7 +9,7 @@
 
 ## Result 
 - [Demo video]()
-- [Report]()
+- [Report](https://github.com/huytuong010101/PBL4-Raspberry-Server-ControlAndTracking/blob/main/PBL4-Report.pdf)
 
 ## Member
 - Nguyen Huy Tuong
