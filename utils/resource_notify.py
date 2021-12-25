@@ -1,6 +1,10 @@
 import asyncio
+import datetime
 from typing import Callable
 import psutil
+from models.HardwareTracking import HardwareTracking
+from threading import Thread
+import asyncio
 
 
 def get_size(bytes, suffix="B"):
@@ -17,7 +21,8 @@ def get_size(bytes, suffix="B"):
         bytes /= factor
 
 
-async def loop_to_notify_resource(send_message: Callable = None, tracking: Callable = None, delay: float = 1):
+async def loop_to_notify_resource(send_message: Callable = None, delay: float = 1, delay_save=30):
+    pre_time = datetime.datetime.now().timestamp()
     while True:
         # get cpu
         cpu = {}
@@ -50,23 +55,40 @@ async def loop_to_notify_resource(send_message: Callable = None, tracking: Calla
                 pass
         # get network
         net = psutil.net_io_counters()
+        byte_send = net.bytes_sent
+        byte_receive = net.bytes_recv
         network = {
-            "sent": get_size(net.bytes_sent),
-            "receive": get_size(net.bytes_recv),
+            "send": get_size(byte_send),
+            "receive": get_size(byte_receive),
+            "byte_send": byte_send,
+            "byte_receive": byte_receive
         }
         # get temperatures
         temperature = None
         if hasattr(psutil, "sensors_temperatures"):
             temperature = psutil.sensors_temperatures()["cpu_thermal"][0].current
         data = {
-            "cpu": cpu,
-            "memory": memory,
-            "disk": disk,
-            "network": network,
-            "temperature": temperature,
+            "event": "update_resource",
+            "data": {
+                "cpu": cpu,
+                "memory": memory,
+                "disk": disk,
+                "network": network,
+                "temperature": temperature,
+            }
         }
         if send_message is not None:
-            await send_message(data)
-        if tracking is not None:
-            await tracking(data)
+            asyncio.get_event_loop().create_task(send_message(data, group="resource"))
+        now = datetime.datetime.now()
+        if now.timestamp() - pre_time > delay_save:
+            pre_time = now.timestamp()
+            save_data = {
+                "time": now,
+                "ram_percent": round(virtual.percent, 2),
+                "cpu_percent": cpu["Total"],
+                "temperature_percent": temperature,
+                "network_send": byte_send,
+                "network_receive": byte_receive,
+            }
+            Thread(target=lambda x: HardwareTracking.create_limit(x), args=(save_data,), daemon=True).start()
         await asyncio.sleep(delay)

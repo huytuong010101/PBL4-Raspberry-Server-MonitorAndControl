@@ -1,0 +1,53 @@
+.user-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 1.1rem;
+}
+
+th, td {
+    text-align: left;
+    padding: 10px;
+}
+
+th {
+    background-color: #b95067;
+    color: white;
+  }
+
+tr:nth-child(even){
+    background: rgba(142, 163, 255, 0.295);
+}
+
+tr:nth-child(odd){
+    background: rgba(255, 177, 177, 0.295);
+}
+
+.btn-user {
+    border-radius: 10px;
+    padding: 5px 10px;
+    color: rgb(255, 255, 255);
+    margin: 3px;
+}
+
+.btn-update {
+    background-color: rgb(156, 113, 255, 0.9);
+}
+
+.btn-delete {
+    background-color: rgb(255, 75, 75, 0.9);
+}
+
+.add-user {
+    justify-content: left;
+}
+
+.btn-add {
+    background-color: rgba(45, 170, 139, 0.9);
+    padding: 10px 20px;
+    font-weight: 500;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}

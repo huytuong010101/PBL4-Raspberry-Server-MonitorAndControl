@@ -1,20 +1,28 @@
 from fastapi import APIRouter
 from fastapi.websockets import WebSocketDisconnect, WebSocket
-from utils import websocket
-from utils import resource_notify
+from services.SocketService import SocketService
+from utils.auth import AuthUtil
+import asyncio
 
 socket_router = APIRouter(tags=["Socket manager"])
-manager = websocket.ConnectionManager(resource_notify.loop_to_notify_resource)
 
 
-@socket_router.websocket("/{user_id}")
-async def websocket_endpoint(ws: WebSocket, user_id: int):
+@socket_router.websocket("/{token}")
+async def websocket_endpoint(ws: WebSocket, token: str):
+    user = None
+    try:
+        user = AuthUtil.decode_token(token)
+    except Exception:
+        return
+    user_id = user["sub"]
     await ws.accept()
-    await manager.add_connection(user_id, ws, {})
+    await SocketService.add_connection(user_id, ws, {"groups": "resource"})
     try:
         while True:
             data = await ws.receive_text()
-            print(">> Receive from socket:", str(data))
+            asyncio.get_event_loop().create_task(SocketService.execute_event(user_id, data))
     except WebSocketDisconnect:
         print(f">> Disconnect to {user_id}:")
-        manager.disconnect(user_id)
+        await SocketService.disconnect(user_id)
+
+

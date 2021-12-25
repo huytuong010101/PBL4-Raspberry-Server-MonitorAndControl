@@ -1,0 +1,111 @@
+.terminal-container {
+    height: 65vh;
+    background: linear-gradient(0.25turn, #e6646590, #ee7c9e90, #ee97ff90);
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.terminal-screen {
+    overflow-y: scroll;
+    width: 95%;
+    height: 90%;
+    border-radius: 15px;
+    background-color: #0e0b13ea;
+    background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);
+    background-size: 50px 50px;
+}
+
+.terminal-screen::-webkit-scrollbar {
+    width: 10px;
+}
+
+.terminal-screen::-webkit-scrollbar-thumb {
+    background: #ac7bb1;
+    border-radius: 10px;
+}
+
+
+
+.terminal-command {
+    margin: 1.2rem;
+    font-family: 'Source Code Pro', monospace;
+    color: #b9b9b9;
+}
+
+.terminal-input {
+    font-family: 'Source Code Pro', monospace;
+    outline: none;
+    background-color: #16131aa2;
+    border-radius: 10px;
+    font-size: larger;
+    margin: 0 20px;
+    flex: 1;
+    padding: 2px 15px;
+    color: #ffffff;
+}
+
+.terminal-contain {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.text-terminal {
+    display: flex;
+    align-items: center;
+}
+
+.text-terminal-icon {
+    display: block;
+    margin-right: 10px;
+}
+
+.item-resource-title-input {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: 13px 23px;
+    background: linear-gradient(0.25turn, #e66465da, #ee7c9eda, #ee97ffda);
+    color: #ffffff;
+    border-radius: 13px;
+}
+
+#btn-cancel {
+    background-color: #a370a7;
+    padding: 7px 15px;
+    border-radius: 15px;
+    outline: none;
+    border: none;
+    font-size: 1.1rem;
+    color: #ffffff;
+    box-shadow: 1px 1px 10px #583a5a7a;
+}
+
+#btn-cancel:hover {
+    background-color: #704e74;
+    cursor: pointer;
+    transition: 0.1s ease-in-out;
+}
+
+@media only screen and (max-width: 815px) {
+    .item-resource-title-input {
+        flex-direction: column;
+        align-items: unset;
+    }
+
+    .terminal-input {
+        margin: 10px 0 0 0;
+        margin-bottom: 10px;
+    }
+
+    .text-terminal {
+        font-size: 80%;
+    }
+}
+
